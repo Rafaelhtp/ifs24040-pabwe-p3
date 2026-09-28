@@ -18,8 +18,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet" />
   
   <!-- Tabler Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" media="print" onload="this.media='all'" />
-  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" /></noscript>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 
   <style>
     /* Paper Texture & Core Typography */
@@ -62,13 +61,13 @@
 
     <!-- Tab Navigation (landmark <nav>) -->
     <nav aria-label="Navigasi Utama" class="flex flex-col sm:flex-row gap-0 border-2 border-stone-800 bg-[#FAFAF7] mb-8">
-      <a href="#expense" data-tab="expense" aria-current="page" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
+      <a href="?tab=expense" data-tab="expense" aria-current="page" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
         <i class="ti ti-wallet text-lg" aria-hidden="true"></i> KEUANGAN
       </a>
-      <a href="#bookmark" data-tab="bookmark" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
+      <a href="?tab=bookmark" data-tab="bookmark" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
         <i class="ti ti-bookmarks text-lg" aria-hidden="true"></i> BOOKMARK
       </a>
-      <a href="#quiz" data-tab="quiz" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition text-stone-800 hover:bg-stone-200">
+      <a href="?tab=quiz" data-tab="quiz" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition text-stone-800 hover:bg-stone-200">
         <i class="ti ti-typography text-lg" aria-hidden="true"></i> KUIS
       </a>
     </nav>
@@ -96,7 +95,7 @@
         <div class="tactile-card p-6 sm:p-8">
           <h2 class="text-3xl font-bold mb-6 flex items-center gap-3"><i class="ti ti-plus text-[#9A161F]" aria-hidden="true"></i> Catat Transaksi</h2>
           <!-- Tambah aria-label pada input & select (Lighthouse Fix) -->
-          <form id="form-expense" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4 mb-2">
+          <form id="form-expense" novalidate class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4 mb-2">
             <input type="text" id="exp-title" aria-label="Nama Transaksi" placeholder="Nama transaksi..." required class="tactile-input md:col-span-2 px-4 py-3 text-sm" />
             <select id="exp-type" aria-label="Tipe Transaksi" required class="tactile-input px-4 py-3 text-sm font-bold">
               <option value="Pemasukan">Pemasukan</option>
@@ -105,6 +104,7 @@
             <input type="text" id="exp-category" aria-label="Kategori" placeholder="Kategori" required class="tactile-input px-4 py-3 text-sm" />
             <input type="number" id="exp-amount" aria-label="Jumlah (Rp)" placeholder="Jumlah (Rp)" min="1" required class="tactile-input px-4 py-3 text-sm" />
             <input type="date" id="exp-date" aria-label="Tanggal Transaksi" required class="tactile-input px-4 py-3 text-sm" />
+            <p id="exp-error" role="alert" class="hidden md:col-span-6 sm:col-span-2 text-sm font-bold text-[#9A161F] border-l-4 border-[#9A161F] pl-3"></p>
             <button type="submit" class="tactile-btn tactile-btn-dark md:col-span-6 py-3 mt-2">Simpan Catatan</button>
           </form>
         </div>
@@ -133,11 +133,12 @@
       <section id="panel-bookmark" class="tab-panel hidden space-y-8" aria-label="Panel Bookmark">
         <div class="tactile-card p-6 sm:p-8">
           <h2 class="text-3xl font-bold mb-6 flex items-center gap-3"><i class="ti ti-bookmark text-[#9A161F]" aria-hidden="true"></i> Arsip Tautan</h2>
-          <form id="form-bookmark" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
+          <form id="form-bookmark" novalidate class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
             <input type="text" id="bm-title" aria-label="Judul Tautan" placeholder="Judul Tautan..." required class="tactile-input px-4 py-3 text-sm" />
             <input type="url" id="bm-url" aria-label="Alamat URL" placeholder="https://..." required class="tactile-input px-4 py-3 text-sm" />
             <input type="text" id="bm-category" aria-label="Kategori Tautan" placeholder="Kategori" required class="tactile-input px-4 py-3 text-sm" />
             <button type="submit" class="tactile-btn tactile-btn-red py-3">Tambahkan</button>
+            <p id="bm-error" role="alert" class="hidden md:col-span-4 text-sm font-bold text-[#9A161F] border-l-4 border-[#9A161F] pl-3"></p>
           </form>
         </div>
 
@@ -200,7 +201,7 @@
     <div class="absolute inset-0 bg-stone-900/70 backdrop-blur-sm modal-backdrop"></div>
     <div class="relative w-full max-w-md tactile-card p-8">
       <h3 id="title-edit-exp" class="text-2xl font-bold font-display mb-6 border-b-2 border-stone-800 pb-2">Ubah Transaksi</h3>
-      <form id="form-exp-edit" class="flex flex-col gap-4">
+      <form id="form-exp-edit" novalidate class="flex flex-col gap-4">
         <input type="hidden" id="edit-exp-id">
         <input type="text" id="edit-exp-title" aria-label="Nama Transaksi" required class="tactile-input px-4 py-3" />
         <select id="edit-exp-type" aria-label="Tipe Transaksi" required class="tactile-input px-4 py-3 font-bold">
@@ -210,6 +211,7 @@
         <input type="text" id="edit-exp-category" aria-label="Kategori" required class="tactile-input px-4 py-3" />
         <input type="number" id="edit-exp-amount" aria-label="Jumlah" min="1" required class="tactile-input px-4 py-3" />
         <input type="date" id="edit-exp-date" aria-label="Tanggal" required class="tactile-input px-4 py-3" />
+        <p id="edit-exp-error" role="alert" class="hidden text-sm font-bold text-[#9A161F] border-l-4 border-[#9A161F] pl-3"></p>
         <div class="flex justify-end gap-3 mt-4">
           <button type="button" aria-label="Tutup Modal" class="btn-close-modal px-6 py-2 border-2 border-stone-800 text-stone-800 font-bold uppercase tracking-widest hover:bg-stone-200">Batal</button>
           <button type="submit" class="tactile-btn tactile-btn-dark px-6 py-2">Simpan</button>
@@ -222,16 +224,29 @@
     <div class="absolute inset-0 bg-stone-900/70 backdrop-blur-sm modal-backdrop"></div>
     <div class="relative w-full max-w-md tactile-card p-8">
       <h3 id="title-edit-bm" class="text-2xl font-bold font-display mb-6 border-b-2 border-stone-800 pb-2">Ubah Tautan</h3>
-      <form id="form-bm-edit" class="flex flex-col gap-4">
+      <form id="form-bm-edit" novalidate class="flex flex-col gap-4">
         <input type="hidden" id="edit-bm-id">
         <input type="text" id="edit-bm-title" aria-label="Judul" required class="tactile-input px-4 py-3" />
         <input type="url" id="edit-bm-url" aria-label="URL" required class="tactile-input px-4 py-3" />
         <input type="text" id="edit-bm-category" aria-label="Kategori" required class="tactile-input px-4 py-3" />
+        <p id="edit-bm-error" role="alert" class="hidden text-sm font-bold text-[#9A161F] border-l-4 border-[#9A161F] pl-3"></p>
         <div class="flex justify-end gap-3 mt-4">
           <button type="button" aria-label="Tutup Modal" class="btn-close-modal px-6 py-2 border-2 border-stone-800 text-stone-800 font-bold uppercase tracking-widest hover:bg-stone-200">Batal</button>
           <button type="submit" class="tactile-btn tactile-btn-red px-6 py-2">Simpan</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div id="modal-confirm" class="fixed inset-0 z-50 hidden items-center justify-center p-4" role="alertdialog" aria-modal="true" aria-labelledby="title-confirm" aria-describedby="confirm-message">
+    <div class="absolute inset-0 bg-stone-900/70 backdrop-blur-sm modal-backdrop"></div>
+    <div class="relative w-full max-w-md tactile-card p-8">
+      <h3 id="title-confirm" class="text-2xl font-bold font-display mb-4 border-b-2 border-stone-800 pb-2">Konfirmasi Hapus</h3>
+      <p id="confirm-message" class="font-serif text-lg mb-6">Hapus data ini secara permanen?</p>
+      <div class="flex justify-end gap-3">
+        <button type="button" class="btn-close-modal px-6 py-2 border-2 border-stone-800 text-stone-800 font-bold uppercase tracking-widest hover:bg-stone-200">Batal</button>
+        <button type="button" id="btn-confirm-delete" class="tactile-btn tactile-btn-red px-6 py-2">Hapus</button>
+      </div>
     </div>
   </div>
 
