@@ -31,7 +31,7 @@ $all(".btn-close-modal, .modal-backdrop").forEach(btn => {
 
 
 /* ==========================================
-   SISTEM TAB NAVIGATION
+   SISTEM TAB NAVIGATION (URL ROUTING / HASH)
 ========================================== */
 const TAB_KEY = "pabwe_active_tab";
 const tabs = $all(".tab-btn");
@@ -41,34 +41,54 @@ const panels = {
   quiz: $("#panel-quiz")
 };
 
-function switchTab(tabId) {
+function renderActiveTab(tabId) {
+  if(!panels[tabId]) tabId = "expense"; 
+
+  // Sembunyikan semua panel
   Object.values(panels).forEach(p => p.classList.add("hidden"));
   
-  // Gaya tab tidak aktif (Kertas Cetak)
+  // Reset gaya semua tab menjadi tidak aktif (kertas cetak)
   tabs.forEach(t => {
     t.className = "tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-b-4 sm:border-b-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200";
   });
 
-  if(!panels[tabId]) tabId = "expense"; 
+  // Tampilkan panel yang aktif
   panels[tabId].classList.remove("hidden");
 
-  // Gaya tab aktif (Tinta Blok Hitam / Merah)
+  // Ubah gaya tab yang aktif (Tinta Blok Hitam / Merah)
   const activeBtn = $(`[data-tab="${tabId}"]`);
   if(activeBtn) {
     const bgColor = tabId === 'quiz' ? 'bg-[#9A161F]' : 'bg-stone-800';
     activeBtn.className = `tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition sm:border-r-2 border-stone-800 ${bgColor} text-[#F4F0EB]`;
   }
 
+  // Simpan persistensi ke LocalStorage (sesuai spesifikasi soal PABWE)
   localStorage.setItem(TAB_KEY, tabId);
 }
 
-tabs.forEach(btn => {
-  btn.addEventListener("click", () => switchTab(btn.dataset.tab));
-});
+// Fungsi untuk menangani perubahan URL (Hash)
+function handleRouting() {
+  // Ambil teks setelah tanda '#' di URL (contoh: dari '#bookmark' menjadi 'bookmark')
+  const hash = window.location.hash.replace("#", "");
+  
+  if (panels[hash]) {
+    // Jika path valid, tampilkan tab tersebut
+    renderActiveTab(hash);
+  } else {
+    // Jika path kosong/tidak valid saat pertama kali web dibuka:
+    // Cek LocalStorage untuk mengembalikan tab terakhir yang dibuka
+    const savedTab = localStorage.getItem(TAB_KEY) || "expense";
+    // Paksa URL berubah sesuai tab terakhir (replaceState agar tidak merusak history Back/Forward)
+    window.history.replaceState(null, null, `#${savedTab}`);
+    renderActiveTab(savedTab);
+  }
+}
 
-const savedTab = localStorage.getItem(TAB_KEY) || "expense";
-switchTab(savedTab);
+// Event Listener ketika hash URL berubah (klik link atau tombol back/forward di browser)
+window.addEventListener("hashchange", handleRouting);
 
+// Jalankan routing saat web pertama kali dimuat
+handleRouting();
 
 /* ==========================================
    FITUR 1: EXPENSE TRACKER
