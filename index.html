@@ -61,13 +61,13 @@
 
     <!-- Tab Navigation (landmark <nav>) -->
     <nav aria-label="Navigasi Utama" class="flex flex-col sm:flex-row gap-0 border-2 border-stone-800 bg-[#FAFAF7] mb-8">
-      <a href="?tab=expense" data-tab="expense" class="tab-btn">
+      <a href="?tab=expense" data-tab="expense" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-stone-800 border-b-4 sm:border-b-0 sm:border-r-2 last:border-b-0 sm:last:border-r-0">
         <i class="ti ti-wallet text-lg" aria-hidden="true"></i> KEUANGAN
       </a>
-      <a href="?tab=bookmark" data-tab="bookmark" class="tab-btn">
+      <a href="?tab=bookmark" data-tab="bookmark" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-stone-800 border-b-4 sm:border-b-0 sm:border-r-2 last:border-b-0 sm:last:border-r-0">
         <i class="ti ti-bookmarks text-lg" aria-hidden="true"></i> BOOKMARK
       </a>
-      <a href="?tab=quiz" data-tab="quiz" class="tab-btn">
+      <a href="?tab=quiz" data-tab="quiz" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-stone-800 border-b-4 sm:border-b-0 sm:border-r-2 last:border-b-0 sm:last:border-r-0">
         <i class="ti ti-typography text-lg" aria-hidden="true"></i> KUIS
       </a>
     </nav>
@@ -137,7 +137,8 @@
             <input type="text" id="bm-title" aria-label="Judul Tautan" placeholder="Judul Tautan..." required class="tactile-input px-4 py-3 text-sm" />
             <input type="url" id="bm-url" aria-label="Alamat URL" placeholder="https://..." required class="tactile-input px-4 py-3 text-sm" />
             <input type="text" id="bm-category" aria-label="Kategori Tautan" placeholder="Kategori" required class="tactile-input px-4 py-3 text-sm" />
-            <button type="submit" class="tactile-btn tactile-btn-red py-3">Tambahkan</button>
+            <input type="text" id="bm-note" aria-label="Catatan Singkat (opsional)" placeholder="Catatan singkat (opsional)..." maxlength="200" class="tactile-input md:col-span-4 px-4 py-3 text-sm" />
+            <button type="submit" class="tactile-btn tactile-btn-red md:col-span-4 py-3 mt-2">Tambahkan</button>
             <p id="bm-error" role="alert" class="hidden md:col-span-4 text-sm font-bold text-[#9A161F] border-l-4 border-[#9A161F] pl-3"></p>
           </form>
         </div>
@@ -229,6 +230,7 @@
         <input type="text" id="edit-bm-title" aria-label="Judul" required class="tactile-input px-4 py-3" />
         <input type="url" id="edit-bm-url" aria-label="URL" required class="tactile-input px-4 py-3" />
         <input type="text" id="edit-bm-category" aria-label="Kategori" required class="tactile-input px-4 py-3" />
+        <input type="text" id="edit-bm-note" aria-label="Catatan Singkat (opsional)" placeholder="Catatan singkat (opsional)..." maxlength="200" class="tactile-input px-4 py-3" />
         <p id="edit-bm-error" role="alert" class="hidden text-sm font-bold text-[#9A161F] border-l-4 border-[#9A161F] pl-3"></p>
         <div class="flex justify-end gap-3 mt-4">
           <button type="button" aria-label="Tutup Modal" class="btn-close-modal px-6 py-2 border-2 border-stone-800 text-stone-800 font-bold uppercase tracking-widest hover:bg-stone-200">Batal</button>

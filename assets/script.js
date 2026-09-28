@@ -73,12 +73,31 @@ function validateUrl(raw) {
   }
 }
 
+const MIN_YEAR = 2000;
+const MAX_YEAR = 2100;
+
+// Format wajib YYYY-MM-DD, harus tanggal nyata di kalender, dan tahun dalam rentang wajar
+function validateDate(raw) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw);
+  if (!match) return { error: "Tanggal transaksi harus berformat YYYY-MM-DD." };
+
+  const [year, month, day] = match.slice(1).map(Number);
+  if (year < MIN_YEAR || year > MAX_YEAR) {
+    return { error: `Tahun transaksi harus antara ${MIN_YEAR} dan ${MAX_YEAR}.` };
+  }
+
+  const parsed = new Date(year, month - 1, day);
+  const isRealDate = parsed.getFullYear() === year && parsed.getMonth() === month - 1 && parsed.getDate() === day;
+  if (!isRealDate) return { error: "Tanggal transaksi tidak ada di kalender." };
+
+  return { value: raw };
+}
+
 // prefix: "exp-" untuk form tambah, "edit-exp-" untuk form ubah
 function readExpenseForm(prefix) {
   const title = $(`#${prefix}title`).value.trim();
   const type = $(`#${prefix}type`).value;
   const category = $(`#${prefix}category`).value.trim();
-  const date = $(`#${prefix}date`).value;
 
   if (!title) return { error: "Nama transaksi tidak boleh kosong." };
   if (!["Pemasukan", "Pengeluaran"].includes(type)) return { error: "Tipe transaksi tidak valid." };
@@ -87,22 +106,26 @@ function readExpenseForm(prefix) {
   const amount = validateAmount($(`#${prefix}amount`).value);
   if (amount.error) return { error: amount.error };
 
-  if (!date || Number.isNaN(Date.parse(date))) return { error: "Tanggal transaksi tidak valid." };
-  return { data: { title, type, category, amount: amount.value, date } };
+  const date = validateDate($(`#${prefix}date`).value);
+  if (date.error) return { error: date.error };
+
+  return { data: { title, type, category, amount: amount.value, date: date.value } };
 }
 
 // prefix: "bm-" untuk form tambah, "edit-bm-" untuk form ubah
 function readBookmarkForm(prefix) {
   const title = $(`#${prefix}title`).value.trim();
   const category = $(`#${prefix}category`).value.trim();
+  const note = $(`#${prefix}note`).value.trim(); // opsional
 
   if (!title) return { error: "Judul tautan tidak boleh kosong." };
   if (!category) return { error: "Kategori tidak boleh kosong." };
+  if (note.length > 200) return { error: "Catatan maksimal 200 karakter." };
 
   const url = validateUrl($(`#${prefix}url`).value);
   if (url.error) return { error: url.error };
 
-  return { data: { title, url: url.value, category } };
+  return { data: { title, url: url.value, category, note } };
 }
 
 /* ==========================================
@@ -183,19 +206,12 @@ const VALID_TABS = ["expense", "bookmark", "quiz"];
 const DEFAULT_TAB = "expense";
 const tabs = $all(".tab-btn"); // satu-satunya pemilihan .tab-btn (dipakai ulang di bawah)
 
-// Sumber tunggal class Tailwind untuk tab (index.html hanya menyimpan class "tab-btn")
+// Class dasar tab ada di index.html; JS hanya men-toggle class untuk state aktif/nonaktif
 const TAB_CLASSES = {
-  base: "tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-stone-800 sm:border-r-2 sm:last:border-r-0",
-  inactive: "border-b-4 sm:border-b-0 last:border-b-0 text-stone-800 hover:bg-stone-200",
-  active: "bg-stone-800 text-[#F4F0EB]",
-  activeQuiz: "bg-[#9A161F] text-[#F4F0EB]"
+  inactive: ["text-stone-800", "hover:bg-stone-200"],
+  active: ["text-[#F4F0EB]"],
+  activeBg: { expense: "bg-stone-800", bookmark: "bg-stone-800", quiz: "bg-[#9A161F]" }
 };
-
-function getTabClass(tabId, isActive) {
-  if (!isActive) return `${TAB_CLASSES.base} ${TAB_CLASSES.inactive}`;
-  const activeState = tabId === "quiz" ? TAB_CLASSES.activeQuiz : TAB_CLASSES.active;
-  return `${TAB_CLASSES.base} ${activeState}`;
-}
 
 const panels = {
   expense: $("#panel-expense"),
@@ -224,7 +240,9 @@ function renderActiveTab(tabId) {
 
   tabs.forEach((t) => {
     const isActive = t.dataset.tab === tabId;
-    t.className = getTabClass(t.dataset.tab, isActive);
+    TAB_CLASSES.inactive.forEach((c) => t.classList.toggle(c, !isActive));
+    TAB_CLASSES.active.forEach((c) => t.classList.toggle(c, isActive));
+    t.classList.toggle(TAB_CLASSES.activeBg[t.dataset.tab], isActive);
     if (isActive) t.setAttribute("aria-current", "page");
     else t.removeAttribute("aria-current");
   });
@@ -439,7 +457,8 @@ function renderBm() {
           <h3 class="font-bold font-display text-xl text-stone-900 line-clamp-1">${escapeHtml(b.title)}</h3>
           <span class="text-[10px] border border-stone-800 bg-transparent text-stone-800 px-2 py-1 uppercase tracking-widest font-bold">${escapeHtml(b.category)}</span>
         </div>
-        <a href="${escapeHtml(b.url)}" target="_blank" rel="noopener noreferrer" class="text-sm font-serif italic text-[#9A161F] hover:bg-[#9A161F] hover:text-white transition break-all block mb-6 p-1"><i class="ti ti-external-link" aria-hidden="true"></i> ${escapeHtml(b.url)}</a>
+        <a href="${escapeHtml(b.url)}" target="_blank" rel="noopener noreferrer" class="text-sm font-serif italic text-[#9A161F] hover:bg-[#9A161F] hover:text-white transition break-all block ${b.note ? "mb-3" : "mb-6"} p-1"><i class="ti ti-external-link" aria-hidden="true"></i> ${escapeHtml(b.url)}</a>
+        ${b.note ? `<p class="text-sm font-serif text-stone-700 break-words mb-6 p-1">${escapeHtml(b.note)}</p>` : ""}
       </div>
       <div class="flex gap-0 border-t-2 border-stone-800 mt-auto pt-4">
         <button type="button" class="flex-1 bg-transparent text-stone-800 py-2 text-sm font-bold uppercase tracking-widest hover:bg-stone-200 border-r-2 border-stone-800" data-action="edit" data-id="${escapeHtml(b.id)}">Ubah</button>
@@ -479,6 +498,7 @@ function openBmEdit(id) {
   $("#edit-bm-title").value = bm.title;
   $("#edit-bm-url").value = bm.url;
   $("#edit-bm-category").value = bm.category;
+  $("#edit-bm-note").value = bm.note || "";
   openModal("#modal-bm-edit");
 }
 
