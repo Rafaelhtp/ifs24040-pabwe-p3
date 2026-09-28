@@ -60,24 +60,24 @@
       </p>
     </header>
 
-    <!-- Tab Navigation (Diperbaiki ARIA roles & landmarknya) -->
-    <div class="flex flex-col sm:flex-row gap-0 border-2 border-stone-800 bg-[#FAFAF7] mb-8" role="tablist" aria-label="Navigasi Utama">
-      <a href="#expense" data-tab="expense" role="tab" aria-selected="true" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
+    <!-- Tab Navigation (landmark <nav>) -->
+    <nav aria-label="Navigasi Utama" class="flex flex-col sm:flex-row gap-0 border-2 border-stone-800 bg-[#FAFAF7] mb-8">
+      <a href="#expense" data-tab="expense" aria-current="page" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
         <i class="ti ti-wallet text-lg" aria-hidden="true"></i> KEUANGAN
       </a>
-      <a href="#bookmark" data-tab="bookmark" role="tab" aria-selected="false" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
+      <a href="#bookmark" data-tab="bookmark" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
         <i class="ti ti-bookmarks text-lg" aria-hidden="true"></i> BOOKMARK
       </a>
-      <a href="#quiz" data-tab="quiz" role="tab" aria-selected="false" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition text-stone-800 hover:bg-stone-200">
+      <a href="#quiz" data-tab="quiz" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition text-stone-800 hover:bg-stone-200">
         <i class="ti ti-typography text-lg" aria-hidden="true"></i> KUIS
       </a>
-    </div>
+    </nav>
 
     <!-- MAIN CONTENT -->
     <main>
       
       <!-- ================== TAB 1: EXPENSE TRACKER ================== -->
-      <section id="panel-expense" class="tab-panel space-y-8" role="tabpanel" aria-label="Panel Keuangan">
+      <section id="panel-expense" class="tab-panel space-y-8" aria-label="Panel Keuangan">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div class="tactile-card p-5 border-t-8 border-t-stone-800">
             <p class="text-sm font-bold uppercase tracking-widest text-stone-500 mb-1">Pemasukan</p>
@@ -130,7 +130,7 @@
       </section>
 
       <!-- ================== TAB 2: BOOKMARK MANAGER ================== -->
-      <section id="panel-bookmark" class="tab-panel hidden space-y-8" role="tabpanel" aria-label="Panel Bookmark">
+      <section id="panel-bookmark" class="tab-panel hidden space-y-8" aria-label="Panel Bookmark">
         <div class="tactile-card p-6 sm:p-8">
           <h2 class="text-3xl font-bold mb-6 flex items-center gap-3"><i class="ti ti-bookmark text-[#9A161F]" aria-hidden="true"></i> Arsip Tautan</h2>
           <form id="form-bookmark" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
@@ -156,7 +156,7 @@
       </section>
 
       <!-- ================== TAB 3: KUIS INTERAKTIF ================== -->
-      <section id="panel-quiz" class="tab-panel hidden space-y-8" role="tabpanel" aria-label="Panel Kuis">
+      <section id="panel-quiz" class="tab-panel hidden space-y-8" aria-label="Panel Kuis">
         <div class="tactile-card p-8 sm:p-12 text-center relative overflow-hidden">
           <div id="quiz-start-screen" class="relative z-10">
             <h2 class="text-4xl sm:text-5xl font-bold mb-4 font-display">Literasi Digital</h2>
