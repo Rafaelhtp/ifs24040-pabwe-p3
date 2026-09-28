@@ -87,9 +87,7 @@ function readExpenseForm(prefix) {
   const amount = validateAmount($(`#${prefix}amount`).value);
   if (amount.error) return { error: amount.error };
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(new Date(date).getTime())) {
-    return { error: "Tanggal transaksi tidak valid." };
-  }
+  if (!date || Number.isNaN(Date.parse(date))) return { error: "Tanggal transaksi tidak valid." };
   return { data: { title, type, category, amount: amount.value, date } };
 }
 
@@ -142,6 +140,18 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeAllModals();
 });
 
+// Setiap form: reset ATAU mengetik ulang akan membersihkan pesan error-nya
+[
+  ["#form-expense", "#exp-error"],
+  ["#form-bookmark", "#bm-error"],
+  ["#form-exp-edit", "#edit-exp-error"],
+  ["#form-bm-edit", "#edit-bm-error"]
+].forEach(([formSelector, errorSelector]) => {
+  const form = $(formSelector);
+  form.addEventListener("reset", () => clearError(errorSelector));
+  form.addEventListener("input", () => clearError(errorSelector));
+});
+
 function askDelete(type, id) {
   pendingDelete = { type, id };
   $("#confirm-message").textContent =
@@ -171,7 +181,22 @@ $("#btn-confirm-delete").addEventListener("click", () => {
 ========================================== */
 const VALID_TABS = ["expense", "bookmark", "quiz"];
 const DEFAULT_TAB = "expense";
-const tabs = $all(".tab-btn");
+const tabs = $all(".tab-btn"); // satu-satunya pemilihan .tab-btn (dipakai ulang di bawah)
+
+// Sumber tunggal class Tailwind untuk tab (index.html hanya menyimpan class "tab-btn")
+const TAB_CLASSES = {
+  base: "tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-stone-800 sm:border-r-2 sm:last:border-r-0",
+  inactive: "border-b-4 sm:border-b-0 last:border-b-0 text-stone-800 hover:bg-stone-200",
+  active: "bg-stone-800 text-[#F4F0EB]",
+  activeQuiz: "bg-[#9A161F] text-[#F4F0EB]"
+};
+
+function getTabClass(tabId, isActive) {
+  if (!isActive) return `${TAB_CLASSES.base} ${TAB_CLASSES.inactive}`;
+  const activeState = tabId === "quiz" ? TAB_CLASSES.activeQuiz : TAB_CLASSES.active;
+  return `${TAB_CLASSES.base} ${activeState}`;
+}
+
 const panels = {
   expense: $("#panel-expense"),
   bookmark: $("#panel-bookmark"),
@@ -195,19 +220,14 @@ function renderActiveTab(tabId) {
 
   Object.values(panels).forEach((p) => p.classList.add("hidden"));
 
-  tabs.forEach((t) => {
-    t.removeAttribute("aria-current");
-    t.className = "tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-b-4 sm:border-b-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200";
-  });
-
   panels[tabId].classList.remove("hidden");
 
-  const activeBtn = $(`[data-tab="${tabId}"]`);
-  if (activeBtn) {
-    activeBtn.setAttribute("aria-current", "page");
-    const bgColor = tabId === "quiz" ? "bg-[#9A161F]" : "bg-stone-800";
-    activeBtn.className = `tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition sm:border-r-2 border-stone-800 ${bgColor} text-[#F4F0EB]`;
-  }
+  tabs.forEach((t) => {
+    const isActive = t.dataset.tab === tabId;
+    t.className = getTabClass(t.dataset.tab, isActive);
+    if (isActive) t.setAttribute("aria-current", "page");
+    else t.removeAttribute("aria-current");
+  });
 }
 
 // Pindah tab: perbarui URL (?tab=...) lalu render panel
@@ -218,7 +238,7 @@ function navigateToTab(tabId, { replace = false } = {}) {
 }
 
 // Klik menu tab: cegah reload, gunakan History API
-$all(".tab-btn").forEach((link) => {
+tabs.forEach((link) => {
   link.addEventListener("click", (e) => {
     e.preventDefault();
     const tabId = link.dataset.tab;
