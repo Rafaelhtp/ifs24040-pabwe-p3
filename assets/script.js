@@ -44,28 +44,26 @@ const panels = {
 function renderActiveTab(tabId) {
   if(!panels[tabId]) tabId = "expense"; 
 
-  // Sembunyikan semua panel
   Object.values(panels).forEach(p => p.classList.add("hidden"));
   
-  // Reset gaya semua tab menjadi tidak aktif (kertas cetak)
   tabs.forEach(t => {
+    // Accessibility Fix: update aria-selected ke false
+    t.setAttribute("aria-selected", "false"); 
     t.className = "tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-b-4 sm:border-b-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200";
   });
 
-  // Tampilkan panel yang aktif
   panels[tabId].classList.remove("hidden");
 
-  // Ubah gaya tab yang aktif (Tinta Blok Hitam / Merah)
   const activeBtn = $(`[data-tab="${tabId}"]`);
   if(activeBtn) {
+    // Accessibility Fix: update aria-selected ke true
+    activeBtn.setAttribute("aria-selected", "true"); 
     const bgColor = tabId === 'quiz' ? 'bg-[#9A161F]' : 'bg-stone-800';
     activeBtn.className = `tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition sm:border-r-2 border-stone-800 ${bgColor} text-[#F4F0EB]`;
   }
 
-  // Simpan persistensi ke LocalStorage (sesuai spesifikasi soal PABWE)
   localStorage.setItem(TAB_KEY, tabId);
 }
-
 // Fungsi untuk menangani perubahan URL (Hash)
 function handleRouting() {
   // Ambil teks setelah tanda '#' di URL (contoh: dari '#bookmark' menjadi 'bookmark')
