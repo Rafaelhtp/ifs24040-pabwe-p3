@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeDash - PABWE P3</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Editorial Serif Style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet" />
+  
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+
+  <style>
+    /* Paper Texture & Core Typography */
+    body { 
+      background-color: #F4F0EB; /* Warm paper color */
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+      font-family: 'Lora', serif; 
+      color: #292524;
+    }
+    h1, h2, h3, .font-display { 
+      font-family: 'Playfair Display', serif; 
+    }
+    .tab-panel.hidden { display: none; }
+    
+    /* Tactile / Print UI Components */
+    .tactile-card {
+      background-color: #FAFAF7;
+      border: 2px solid #292524;
+      box-shadow: 6px 6px 0px 0px #292524;
+    }
+    .tactile-input {
+      background-color: transparent;
+      border: 2px solid #292524;
+      border-radius: 0;
+      transition: all 0.2s;
+    }
+    .tactile-input:focus {
+      outline: none;
+      background-color: #FAFAF7;
+      box-shadow: 3px 3px 0px 0px #292524;
+    }
+    .tactile-btn {
+      border: 2px solid #292524;
+      border-radius: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      transition: all 0.2s;
+    }
+    .tactile-btn-red {
+      background-color: #9A161F;
+      color: #F4F0EB;
+      border-color: #9A161F;
+    }
+    .tactile-btn-red:hover {
+      background-color: #7A1016;
+      box-shadow: 4px 4px 0px 0px #292524;
+    }
+    .tactile-btn-dark {
+      background-color: #292524;
+      color: #F4F0EB;
+    }
+    .tactile-btn-dark:hover {
+      background-color: #1c1917;
+      box-shadow: 4px 4px 0px 0px #9A161F;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    
+    <!-- Header (Matching the Magazine Reference) -->
+    <header class="mb-10 text-center sm:text-left border-b-2 border-stone-800 pb-8 relative overflow-hidden">
+      <!-- Decorative Red Circle from reference -->
+      <div class="absolute -top-4 right-4 sm:right-20 w-24 h-24 bg-[#9A161F] rounded-full opacity-90 mix-blend-multiply"></div>
+      
+      <h1 class="text-7xl sm:text-8xl lg:text-9xl font-bold tracking-tighter font-display mb-4 text-stone-800 relative z-10">
+        <span class="text-[#9A161F]">L</span>ifeDash
+      </h1>
+      <p class="text-xl sm:text-2xl text-stone-800 font-medium max-w-2xl leading-snug relative z-10">
+        Texture, paper, and imperfect surfaces make digital design feel human.
+      </p>
+    </header>
+
+    <!-- Tab Navigation (Editorial Block Style) -->
+    <nav class="flex flex-col sm:flex-row gap-0 border-2 border-stone-800 bg-[#FAFAF7] mb-8" role="tablist">
+      <button type="button" data-tab="expense" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
+        <i class="ti ti-wallet text-lg"></i> KEUANGAN
+      </button>
+      <button type="button" data-tab="bookmark" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition border-r-0 sm:border-r-2 border-stone-800 text-stone-800 hover:bg-stone-200">
+        <i class="ti ti-bookmarks text-lg"></i> BOOKMARK
+      </button>
+      <button type="button" data-tab="quiz" class="tab-btn flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold transition text-stone-800 hover:bg-stone-200">
+        <i class="ti ti-typography text-lg"></i> KUIS
+      </button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      
+      <!-- ================== TAB 1: EXPENSE TRACKER ================== -->
+      <section id="panel-expense" class="tab-panel space-y-8">
+        <!-- Dashboard Summary -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div class="tactile-card p-5 border-t-8 border-t-stone-800">
+            <p class="text-sm font-bold uppercase tracking-widest text-stone-500 mb-1">Pemasukan</p>
+            <p id="exp-total-in" class="text-2xl font-display font-bold text-stone-900">Rp 0</p>
+          </div>
+          <div class="tactile-card p-5 border-t-8 border-t-[#9A161F]">
+            <p class="text-sm font-bold uppercase tracking-widest text-[#9A161F] mb-1">Pengeluaran</p>
+            <p id="exp-total-out" class="text-2xl font-display font-bold text-stone-900">Rp 0</p>
+          </div>
+          <div class="tactile-card p-5 border-t-8 border-t-stone-400 bg-stone-800 text-[#F4F0EB]">
+            <p class="text-sm font-bold uppercase tracking-widest text-stone-400 mb-1">Saldo Saat Ini</p>
+            <p id="exp-balance" class="text-2xl font-display font-bold">Rp 0</p>
+          </div>
+        </div>
+
+        <!-- Add Form -->
+        <div class="tactile-card p-6 sm:p-8">
+          <h2 class="text-3xl font-bold mb-6 flex items-center gap-3"><i class="ti ti-plus text-[#9A161F]"></i> Catat Transaksi</h2>
+          <form id="form-expense" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4 mb-2">
+            <input type="text" id="exp-title" placeholder="Nama transaksi..." required class="tactile-input md:col-span-2 px-4 py-3 text-sm" />
+            <select id="exp-type" required class="tactile-input px-4 py-3 text-sm font-bold">
+              <option value="Pemasukan">Pemasukan</option>
+              <option value="Pengeluaran" selected>Pengeluaran</option>
+            </select>
+            <input type="text" id="exp-category" placeholder="Kategori" required class="tactile-input px-4 py-3 text-sm" />
+            <input type="number" id="exp-amount" placeholder="Jumlah (Rp)" min="1" required class="tactile-input px-4 py-3 text-sm" />
+            <input type="date" id="exp-date" required class="tactile-input px-4 py-3 text-sm" />
+            <button type="submit" class="tactile-btn tactile-btn-dark md:col-span-6 py-3 mt-2">Simpan Catatan</button>
+          </form>
+        </div>
+
+        <!-- Filter & Search -->
+        <div>
+          <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <input type="text" id="exp-search" placeholder="Cari arsip..." class="tactile-input flex-1 px-4 py-3 text-sm bg-white/50">
+            <select id="exp-filter-type" class="tactile-input px-4 py-3 text-sm font-bold bg-white/50">
+              <option value="All">Semua Tipe</option>
+              <option value="Pemasukan">Pemasukan</option>
+              <option value="Pengeluaran">Pengeluaran</option>
+            </select>
+            <select id="exp-sort" class="tactile-input px-4 py-3 text-sm font-bold bg-white/50">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="highest">Nominal Terbesar</option>
+              <option value="lowest">Nominal Terkecil</option>
+            </select>
+          </div>
+
+          <!-- List -->
+          <div id="exp-empty" class="hidden text-center py-12 text-stone-500 font-serif italic border-2 border-dashed border-stone-400">Lembar catatan masih kosong.</div>
+          <ul id="exp-list" class="space-y-4"></ul>
+        </div>
+      </section>
+
+      <!-- ================== TAB 2: BOOKMARK MANAGER ================== -->
+      <section id="panel-bookmark" class="tab-panel hidden space-y-8">
+        <div class="tactile-card p-6 sm:p-8">
+          <h2 class="text-3xl font-bold mb-6 flex items-center gap-3"><i class="ti ti-bookmark text-[#9A161F]"></i> Arsip Tautan</h2>
+          
+          <form id="form-bookmark" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
+            <input type="text" id="bm-title" placeholder="Judul Tautan..." required class="tactile-input px-4 py-3 text-sm" />
+            <input type="url" id="bm-url" placeholder="https://..." required class="tactile-input px-4 py-3 text-sm" />
+            <input type="text" id="bm-category" placeholder="Kategori" required class="tactile-input px-4 py-3 text-sm" />
+            <button type="submit" class="tactile-btn tactile-btn-red py-3">Tambahkan</button>
+          </form>
+        </div>
+
+        <div>
+          <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <input type="text" id="bm-search" placeholder="Cari dalam arsip..." class="tactile-input flex-1 px-4 py-3 text-sm bg-white/50">
+            <select id="bm-sort" class="tactile-input px-4 py-3 text-sm font-bold bg-white/50">
+              <option value="newest">Terbaru Ditambahkan</option>
+              <option value="asc">A - Z</option>
+              <option value="desc">Z - A</option>
+            </select>
+          </div>
+
+          <div id="bm-empty" class="hidden text-center py-12 text-stone-500 font-serif italic border-2 border-dashed border-stone-400">Belum ada tautan diarsipkan.</div>
+          <ul id="bm-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></ul>
+        </div>
+      </section>
+
+      <!-- ================== TAB 3: KUIS INTERAKTIF ================== -->
+      <section id="panel-quiz" class="tab-panel hidden space-y-8">
+        <div class="tactile-card p-8 sm:p-12 text-center relative overflow-hidden">
+          
+          <!-- Screen 1: Start -->
+          <div id="quiz-start-screen" class="relative z-10">
+            <h2 class="text-4xl sm:text-5xl font-bold mb-4 font-display">Literasi Digital</h2>
+            <p class="text-stone-700 mb-8 font-serif italic text-lg">Uji wawasan Anda seputar dasar HTML, CSS, dan JavaScript.</p>
+            <div class="inline-block border-y-2 border-stone-800 py-2 px-8 mb-8">
+                <p class="font-bold font-display text-xl uppercase tracking-widest">Rekor Tertinggi: <span id="quiz-highscore" class="text-[#9A161F]">0</span> / 5</p>
+            </div>
+            <br>
+            <button id="btn-start-quiz" class="tactile-btn tactile-btn-dark px-10 py-4 text-lg">Mulai Ujian</button>
+          </div>
+
+          <!-- Screen 2: Question -->
+          <div id="quiz-question-screen" class="hidden text-left max-w-2xl mx-auto relative z-10">
+            <div class="flex justify-between items-end border-b-4 border-stone-800 pb-4 mb-6">
+              <span class="text-xl font-bold font-display uppercase tracking-widest text-[#9A161F]">Soal <span id="quiz-current-num">1</span>/5</span>
+              <span class="text-lg font-bold font-display border-2 border-stone-800 px-3 py-1 bg-[#FAFAF7]">
+                Waktu: <span id="quiz-timer" class="text-[#9A161F]">15</span>s
+              </span>
+            </div>
+            <h3 id="quiz-question" class="text-2xl font-bold mb-8 leading-snug font-display">Pertanyaan...</h3>
+            <div id="quiz-options" class="flex flex-col gap-4">
+              <!-- Options rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Screen 3: Result -->
+          <div id="quiz-result-screen" class="hidden relative z-10">
+            <h2 class="text-4xl font-bold mb-4 font-display">Evaluasi Selesai</h2>
+            <p class="text-stone-700 mb-6 font-serif italic text-lg">Jawaban benar yang Anda kumpulkan:</p>
+            <p class="text-7xl font-bold font-display text-stone-900 mb-2"><span id="quiz-final-score">0</span><span class="text-3xl text-stone-500">/5</span></p>
+            <p id="quiz-new-record" class="text-[#9A161F] font-bold tracking-widest uppercase mb-8 hidden border-2 border-[#9A161F] inline-block px-4 py-1 mt-4">Pencapaian Baru!</p>
+            <br>
+            <button id="btn-restart-quiz" class="tactile-btn tactile-btn-dark px-8 py-3">Ulangi Evaluasi</button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================== GLOBAL MODALS (Tactile Style) ================== -->
+  <div id="modal-exp-edit" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-stone-900/70 backdrop-blur-sm modal-backdrop"></div>
+    <div class="relative w-full max-w-md tactile-card p-8">
+      <h3 class="text-2xl font-bold font-display mb-6 border-b-2 border-stone-800 pb-2">Ubah Transaksi</h3>
+      <form id="form-exp-edit" class="flex flex-col gap-4">
+        <input type="hidden" id="edit-exp-id">
+        <input type="text" id="edit-exp-title" required class="tactile-input px-4 py-3" />
+        <select id="edit-exp-type" required class="tactile-input px-4 py-3 font-bold">
+          <option value="Pemasukan">Pemasukan</option>
+          <option value="Pengeluaran">Pengeluaran</option>
+        </select>
+        <input type="text" id="edit-exp-category" required class="tactile-input px-4 py-3" />
+        <input type="number" id="edit-exp-amount" min="1" required class="tactile-input px-4 py-3" />
+        <input type="date" id="edit-exp-date" required class="tactile-input px-4 py-3" />
+        <div class="flex justify-end gap-3 mt-4">
+          <button type="button" class="btn-close-modal px-6 py-2 border-2 border-stone-800 text-stone-800 font-bold uppercase tracking-widest hover:bg-stone-200">Batal</button>
+          <button type="submit" class="tactile-btn tactile-btn-dark px-6 py-2">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-bm-edit" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-stone-900/70 backdrop-blur-sm modal-backdrop"></div>
+    <div class="relative w-full max-w-md tactile-card p-8">
+      <h3 class="text-2xl font-bold font-display mb-6 border-b-2 border-stone-800 pb-2">Ubah Tautan</h3>
+      <form id="form-bm-edit" class="flex flex-col gap-4">
+        <input type="hidden" id="edit-bm-id">
+        <input type="text" id="edit-bm-title" required class="tactile-input px-4 py-3" />
+        <input type="url" id="edit-bm-url" required class="tactile-input px-4 py-3" />
+        <input type="text" id="edit-bm-category" required class="tactile-input px-4 py-3" />
+        <div class="flex justify-end gap-3 mt-4">
+          <button type="button" class="btn-close-modal px-6 py-2 border-2 border-stone-800 text-stone-800 font-bold uppercase tracking-widest hover:bg-stone-200">Batal</button>
+          <button type="submit" class="tactile-btn tactile-btn-red px-6 py-2">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/script.js"></script>
+</body>
+</html>
